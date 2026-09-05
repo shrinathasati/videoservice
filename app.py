@@ -49,7 +49,7 @@ def run_download(job_id: str, url: str):
         output_template = os.path.join(DOWNLOAD_DIR, f"{job_id}.%(ext)s")
 
         ydl_opts = {
-            "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+            "format": "bv*+ba/b",
             "outtmpl": output_template,
             "cookiefile": "cookies.txt",
             "merge_output_format": "mp4",
