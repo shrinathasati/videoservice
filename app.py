@@ -51,6 +51,7 @@ def run_download(job_id: str, url: str):
         ydl_opts = {
             "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
             "outtmpl": output_template,
+            "cookiefile": "cookies.txt",
             "merge_output_format": "mp4",
             "noplaylist": True,
             "quiet": True,
