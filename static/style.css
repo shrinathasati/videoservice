@@ -1,0 +1,221 @@
+:root {
+  --bg: #0E1F1B;
+  --surface: #15302A;
+  --surface-border: #244A40;
+  --text: #EDF3F0;
+  --text-muted: #93A9A3;
+  --accent: #F2B441;
+  --accent-dark: #C9902B;
+  --success: #4FD1C5;
+  --error: #E8694F;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  background: radial-gradient(circle at top left, #143028 0%, var(--bg) 55%);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 0 20px 40px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* ---------- Header ---------- */
+.site-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 28px 4px 22px;
+  width: 100%;
+  max-width: 520px;
+}
+
+.reel-icon {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.reel-icon span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: inline-block;
+}
+
+.reel-icon span:nth-child(2) { background: var(--success); opacity: 0.85; }
+.reel-icon span:nth-child(3) { background: var(--accent); opacity: 0.6; }
+
+.site-header h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+/* ---------- Main / Card ---------- */
+.wrap {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+  padding: 34px 28px 30px;
+  box-shadow: 0 20px 60px -30px rgba(0, 0, 0, 0.6);
+}
+
+.card h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.7rem;
+  line-height: 1.25;
+  font-weight: 700;
+  margin: 0 0 8px;
+  max-width: 20ch;
+}
+
+.sub {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0 0 26px;
+  max-width: 46ch;
+}
+
+#download-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#url-input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--surface-border);
+  background: #0E1F1B;
+  color: var(--text);
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+#url-input::placeholder { color: #5B7A72; }
+
+#url-input:focus {
+  border-color: var(--accent);
+}
+
+#action-btn {
+  position: relative;
+  padding: 14px 18px;
+  border-radius: 10px;
+  border: none;
+  background: var(--accent);
+  color: #16261F;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+#action-btn:hover { background: var(--accent-dark); }
+#action-btn:active { transform: scale(0.98); }
+
+#action-btn:focus-visible {
+  outline: 2px solid var(--success);
+  outline-offset: 2px;
+}
+
+#action-btn[disabled] {
+  cursor: progress;
+  opacity: 0.9;
+}
+
+#action-btn[data-state="done"] {
+  background: var(--success);
+  color: #0E1F1B;
+}
+
+.spinner {
+  display: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(22, 38, 31, 0.3);
+  border-top-color: #16261F;
+  animation: spin 0.7s linear infinite;
+}
+
+#action-btn[data-state="loading"] .spinner { display: inline-block; }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; }
+}
+
+.message {
+  margin: 16px 0 0;
+  font-size: 0.9rem;
+  min-height: 1.2em;
+  color: var(--text-muted);
+}
+
+.message[data-tone="error"] { color: var(--error); }
+.message[data-tone="success"] { color: var(--success); }
+
+.video-title {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.footnote {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin: 20px 6px 0;
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 480px) {
+  .card {
+    padding: 26px 20px 24px;
+    border-radius: 12px;
+  }
+  .card h2 { font-size: 1.4rem; }
+  .site-header h1 { font-size: 1.1rem; }
+}

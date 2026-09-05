@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shrinath's Web Service — YouTube Downloader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="reel-icon" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </div>
+    <h1>Shrinath's Web Service</h1>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <h2>Paste a link. Get the video.</h2>
+      <p class="sub">Works with full YouTube videos and Shorts. Saves straight to MP4.</p>
+
+      <form id="download-form" autocomplete="off">
+        <label for="url-input" class="visually-hidden">YouTube link</label>
+        <input
+          type="url"
+          id="url-input"
+          name="url"
+          placeholder="https://youtube.com/watch?v=... or /shorts/..."
+          required
+        >
+
+        <button type="submit" id="action-btn" data-state="idle">
+          <span class="btn-label">Submit</span>
+          <span class="spinner" aria-hidden="true"></span>
+        </button>
+      </form>
+
+      <p id="message" class="message" role="status" aria-live="polite"></p>
+      <p id="video-title" class="video-title"></p>
+    </section>
+
+    <p class="footnote">Only download videos you have the right to save. Large videos take longer to prepare.</p>
+  </main>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
