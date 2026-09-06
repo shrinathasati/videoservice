@@ -48,20 +48,13 @@ def run_download(job_id: str, url: str):
         cleanup_old_files()
         output_template = os.path.join(DOWNLOAD_DIR, f"{job_id}.%(ext)s")
 
-        # ydl_opts = {
-        #     "format": "bv*+ba/b",
-        #     "outtmpl": output_template,
-        #     "cookiefile": "cookies.txt",
-        #     "merge_output_format": "mp4",
-        #     "noplaylist": True,
-        #     "quiet": True,
-        #     "no_warnings": True,
-        #     "restrictfilenames": True,
-        # }
+        cookie_path = "/etc/secrets/cookies.txt" if os.path.exists("/etc/secrets/cookies.txt") else "cookies.txt"
+        print("COOKIE FILE EXISTS:", os.path.exists(cookie_path), cookie_path)
+
         ydl_opts = {
             "format": "bv*+ba/b",
             "outtmpl": output_template,
-            "cookiefile": "cookies.txt",
+            "cookiefile": cookie_path if os.path.exists(cookie_path) else None,
             "merge_output_format": "mp4",
             "noplaylist": True,
             "quiet": True,
