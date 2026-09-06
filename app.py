@@ -30,6 +30,21 @@ def is_valid_youtube_url(url: str) -> bool:
     return bool(YOUTUBE_URL_PATTERN.match(url.strip()))
 
 
+import shutil
+
+def get_cookie_path():
+    secret_path = "/etc/secrets/cookies.txt"
+    writable_path = "/tmp/cookies.txt"
+
+    if os.path.exists(secret_path):
+        if not os.path.exists(writable_path):
+            shutil.copyfile(secret_path, writable_path)
+        return writable_path
+
+    if os.path.exists("cookies.txt"):
+        return "cookies.txt"
+
+    return None
 def cleanup_old_files(max_age_minutes=30):
     """Delete leftover files older than max_age_minutes."""
     now = time.time()
@@ -47,9 +62,8 @@ def run_download(job_id: str, url: str):
     try:
         cleanup_old_files()
         output_template = os.path.join(DOWNLOAD_DIR, f"{job_id}.%(ext)s")
-
-        cookie_path = "/etc/secrets/cookies.txt" if os.path.exists("/etc/secrets/cookies.txt") else "cookies.txt"
-        print("COOKIE FILE EXISTS:", os.path.exists(cookie_path), cookie_path, flush=True)
+        cookie_path = get_cookie_path()
+        print("COOKIE FILE EXISTS:", cookie_path is not None, cookie_path, flush=True)
 
         ydl_opts = {
             "format": "bv*+ba/b",
