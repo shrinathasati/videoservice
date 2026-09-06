@@ -48,6 +48,16 @@ def run_download(job_id: str, url: str):
         cleanup_old_files()
         output_template = os.path.join(DOWNLOAD_DIR, f"{job_id}.%(ext)s")
 
+        # ydl_opts = {
+        #     "format": "bv*+ba/b",
+        #     "outtmpl": output_template,
+        #     "cookiefile": "cookies.txt",
+        #     "merge_output_format": "mp4",
+        #     "noplaylist": True,
+        #     "quiet": True,
+        #     "no_warnings": True,
+        #     "restrictfilenames": True,
+        # }
         ydl_opts = {
             "format": "bv*+ba/b",
             "outtmpl": output_template,
@@ -57,6 +67,11 @@ def run_download(job_id: str, url: str):
             "quiet": True,
             "no_warnings": True,
             "restrictfilenames": True,
+            "extractor_args": {
+                "youtube": {
+                    "player_client": ["android", "ios", "web"]
+                }
+            },
         }
 
 
