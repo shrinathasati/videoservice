@@ -49,7 +49,7 @@ def run_download(job_id: str, url: str):
         output_template = os.path.join(DOWNLOAD_DIR, f"{job_id}.%(ext)s")
 
         cookie_path = "/etc/secrets/cookies.txt" if os.path.exists("/etc/secrets/cookies.txt") else "cookies.txt"
-        print("COOKIE FILE EXISTS:", os.path.exists(cookie_path), cookie_path)
+        print("COOKIE FILE EXISTS:", os.path.exists(cookie_path), cookie_path, flush=True)
 
         ydl_opts = {
             "format": "bv*+ba/b",
