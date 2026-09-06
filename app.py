@@ -68,6 +68,7 @@ def run_download(job_id: str, url: str):
         ydl_opts = {
             "format": "bv*+ba/b",
             "outtmpl": output_template,
+            "proxy": "http://oxesqivg:f37o0ztqvoo6@31.59.20.176:6754"
             "cookiefile": cookie_path if os.path.exists(cookie_path) else None,
             "merge_output_format": "mp4",
             "noplaylist": True,
