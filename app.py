@@ -77,7 +77,7 @@ def run_download(job_id: str, url: str):
             "restrictfilenames": True,
             "extractor_args": {
                 "youtube": {
-                    "player_client": ["android", "ios", "web"]
+                    "player_client": ["tv", "ios", "android", "web"],
                 }
             },
         }
