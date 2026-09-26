@@ -72,17 +72,14 @@ def run_download(job_id: str, url: str):
             "cookiefile": cookie_path if os.path.exists(cookie_path) else None,
             "merge_output_format": "mp4",
             "noplaylist": True,
-            "quiet": True,
-            "no_warnings": True,
+            "quiet": False,
+            "verbose": True,
+            "no_warnings": False,
             "restrictfilenames": True,
-            "extractor_args": {
-                "youtube": {
-                    "player_client": ["tv", "ios", "android", "web"],
-                }
-            },
+            "retries": 10,
+            "fragment_retries": 10,
+            "socket_timeout": 30,
         }
-
-
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
             title = info.get("title", "video")
