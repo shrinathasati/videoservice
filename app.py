@@ -2,6 +2,8 @@ import os
 import re
 import time
 import uuid
+import shutil
+import subprocess
 import threading
 
 from flask import Flask, render_template, request, jsonify, send_file, after_this_request
@@ -17,7 +19,25 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DOWNLOAD_DIR = os.path.join(BASE_DIR, "downloads")
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
-# In-memory job store: job_id -> {"status", "filepath", "title", "error"}
+BGUTIL_SERVER_DIR = os.path.join(BASE_DIR, "bgutil-ytdlp-pot-provider", "server")
+
+
+def start_bgutil_server():
+    build_file = os.path.join(BGUTIL_SERVER_DIR, "build", "main.js")
+    if os.path.exists(build_file):
+        subprocess.Popen(
+            ["node", "build/main.js"],
+            cwd=BGUTIL_SERVER_DIR,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        print("Started bgutil PO Token server", flush=True)
+    else:
+        print("bgutil server not built — check build logs", flush=True)
+
+
+start_bgutil_server()
+
 JOBS = {}
 JOBS_LOCK = threading.Lock()
 
@@ -30,23 +50,23 @@ def is_valid_youtube_url(url: str) -> bool:
     return bool(YOUTUBE_URL_PATTERN.match(url.strip()))
 
 
-import shutil
-
 def get_cookie_path():
     secret_path = "/etc/secrets/cookies.txt"
     writable_path = "/tmp/cookies.txt"
+    local_path = os.path.join(BASE_DIR, "cookies.txt")
 
     if os.path.exists(secret_path):
         if not os.path.exists(writable_path):
             shutil.copyfile(secret_path, writable_path)
         return writable_path
 
-    if os.path.exists("cookies.txt"):
-        return "cookies.txt"
+    if os.path.exists(local_path):
+        return local_path
 
     return None
+
+
 def cleanup_old_files(max_age_minutes=30):
-    """Delete leftover files older than max_age_minutes."""
     now = time.time()
     for fname in os.listdir(DOWNLOAD_DIR):
         fpath = os.path.join(DOWNLOAD_DIR, fname)
@@ -58,10 +78,10 @@ def cleanup_old_files(max_age_minutes=30):
 
 
 def run_download(job_id: str, url: str):
-    """Background worker: downloads the video/short and merges to MP4."""
     try:
         cleanup_old_files()
         output_template = os.path.join(DOWNLOAD_DIR, f"{job_id}.%(ext)s")
+
         cookie_path = get_cookie_path()
         print("COOKIE FILE EXISTS:", cookie_path is not None, cookie_path, flush=True)
 
@@ -69,7 +89,6 @@ def run_download(job_id: str, url: str):
             "format": "bv*+ba/b",
             "outtmpl": output_template,
             "proxy": "http://oxesqivg:f37o0ztqvoo6@45.38.107.97:6014",
-            "cookiefile": cookie_path if os.path.exists(cookie_path) else None,
             "merge_output_format": "mp4",
             "noplaylist": True,
             "quiet": False,
@@ -80,6 +99,9 @@ def run_download(job_id: str, url: str):
             "fragment_retries": 10,
             "socket_timeout": 30,
         }
+        if cookie_path:
+            ydl_opts["cookiefile"] = cookie_path
+
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
             title = info.get("title", "video")
@@ -176,4 +198,4 @@ def download_file(job_id):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(debug=False, host="0.0.0.0", port=port)
