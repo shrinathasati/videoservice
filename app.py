@@ -98,6 +98,12 @@ def run_download(job_id: str, url: str):
             "retries": 10,
             "fragment_retries": 10,
             "socket_timeout": 30,
+            "js_runtimes": {"node": {}},
+            "extractor_args": {
+                "youtube": {
+                    "player_client": ["android", "ios", "tv"],
+                }
+            },
         }
         if cookie_path:
             ydl_opts["cookiefile"] = cookie_path
