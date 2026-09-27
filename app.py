@@ -102,16 +102,13 @@ def run_download(job_id: str, url: str):
             "remote_components": {"ejs:github"},
             "extractor_args": {
                 "youtube": {
-                    "player_client": ["android", "ios"],
+                    "player_client": ["mweb", "tv"],
+                    "formats": ["missing_pot"],
                 }
             },
         }
-        # NOTE: cookiefile intentionally left out for this attempt -- the
-        # android/ios clients skip cookie-based auth entirely (they rely on
-        # the PO Token server instead), and passing cookies was causing
-        # yt-dlp to skip those two clients ("does not support cookies").
-        # if cookie_path:
-        #     ydl_opts["cookiefile"] = cookie_path
+        if cookie_path:
+            ydl_opts["cookiefile"] = cookie_path
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
